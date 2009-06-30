@@ -11,9 +11,13 @@ describe SvnFixture do
       SvnFixture.svn_time(d).should == '2009-06-19T00:00:00.000000Z'
     end
     
-    it 'should parse the #to_s value if not a Date or Time' do
+    it 'should parse the #to_s value if not a Date or Time or nil' do
       t = '2009-06-18 13:00'
       SvnFixture.svn_time(t).should == '2009-06-18T13:00:00.000000Z'
+    end
+    
+    it 'should return nil if value is nil' do
+      SvnFixture.svn_time(nil).should be_nil
     end
   end
 end

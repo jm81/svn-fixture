@@ -5,7 +5,7 @@ module SvnFixture
     def initialize(repo, name, message = "", options = {}, &block)
       @repo, @name, @message, @block = repo, name, message, block
       @author = options.delete(:author)
-      @time = svn_time(options.delete(:date))
+      @time = SvnFixture.svn_time(options.delete(:date))
       @root = Directory.new(@repo, @repo.wc_path)
     end
     

@@ -27,6 +27,7 @@ module SvnFixture
     # (example 2009-06-28T12:00:00.000000Z). If +val+ does not respond to 
     # +strftime+, val will first be parsed via +Time.parse+.
     def svn_time(val)
+      return nil if val.nil?
       val = Time.parse(val) unless val.respond_to?(:strftime)
       val.strftime("%Y-%m-%dT%H:%M:%S.000000Z")
     end
