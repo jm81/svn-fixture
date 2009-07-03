@@ -101,7 +101,28 @@ describe SvnFixture::Repository do
   end
   
   describe '#revision' do
-    it 'needs tests'
+    before(:each) do
+      @repos = @klass.new('test')
+    end
+    
+    it 'should create a Revision' do
+      SvnFixture::Revision.should_receive(:new).with(@repos, 1, 'log msg', {})
+      @repos.revision(1, 'log msg', {})
+    end
+    
+    it 'should add Revision to @revisions' do
+      @repos.instance_variable_get(:@revisions).should == []
+      rev1 = @repos.revision(1, 'log msg', {})
+      rev2 = @repos.revision(2, 'log msg', {})
+      @repos.instance_variable_get(:@revisions).should == [rev1, rev2]
+    end
+    
+    it 'should accept a block' do
+      rev = @repos.revision(1, 'log msg', {}) do
+        dir('whatever')
+      end
+      rev.instance_variable_get(:@block).should be_kind_of(Proc)
+    end
   end
 
   describe '#create' do

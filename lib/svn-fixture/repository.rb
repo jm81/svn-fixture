@@ -67,8 +67,18 @@ module SvnFixture
       self.instance_eval(&block) if block_given?
     end
     
+    # Add a Revision to this Repository. +name+ and +msg+ are required.
+    # - +name+: A name (or number of Revision). This is used in informational
+    #   messages only.
+    # - +msg+: Log message for the revision.
+    # - +options+: :author and :date Revision properties.
+    # - Accepts a block that is processed by Revision#commit within a Directory
+    #   instance (the root directory at this revision). See +Directory+ for
+    #   more information.
     def revision(name, msg, options = {}, &block)
-      @revisions << Revision.new(self, name, msg, options, &block)
+      r = Revision.new(self, name, msg, options, &block)
+      @revisions << r
+      r
     end
     
     # Partly based on setup_repository method from
