@@ -11,6 +11,10 @@ describe 'SvnFixture integration' do
     @fs = @repos.fs
   end
   
+  after(:all) do
+    SvnFixture::Repository.destroy_all
+  end
+  
   describe 'revision 1' do
     before(:each) do
       @root = @fs.root(1)

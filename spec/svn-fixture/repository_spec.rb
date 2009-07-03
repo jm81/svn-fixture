@@ -7,12 +7,12 @@ describe SvnFixture::Repository do
   
   before(:each) do
     # Force to default state
-    @klass.instance_variable_set(:@repositories, {})
+    @klass.destroy_all
   end
   
   after(:all) do
     # Force to default state for other specs
-    @klass.instance_variable_set(:@repositories, {})
+    @klass.destroy_all
   end
   
   describe '.get' do
