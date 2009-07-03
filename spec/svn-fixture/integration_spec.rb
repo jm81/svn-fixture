@@ -5,7 +5,7 @@ describe 'SvnFixture integration' do
   before(:all) do
     SvnFixture::Repository.instance_variable_set(:@repositories, {})
     load File.dirname(__FILE__) + '/fixtures/hello_world.rb'
-    SvnFixture::repo('hello_world').create.commit
+    SvnFixture::repo('hello_world').commit
     repos_path = File.join(Dir.tmpdir, 'svn-fixture', 'repo_hello_world')
     @repos = ::Svn::Repos.open(repos_path)
     @fs = @repos.fs

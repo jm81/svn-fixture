@@ -99,12 +99,12 @@ module SvnFixture
       FileUtils.mkdir_p(@repos_path)
       @dirs_created << @repos_path
       ::Svn::Repos.create(@repos_path)
-
-      checkout
+      self
     end
 
     # Setup context and working copy
     def checkout
+      create unless ::File.exist?(@repos_path)
       @repos = ::Svn::Repos.open(@repos_path)
       @repos_uri = "file://" + ::File.expand_path(@repos_path)
       FileUtils.mkdir_p(@wc_path)
@@ -123,6 +123,7 @@ module SvnFixture
     end
 
     def commit(to_commit = nil)
+      checkout unless ::File.exist?(@wc_path)
       to_commit = @revisions if to_commit.nil?
       to_commit = [to_commit] if (!to_commit.respond_to?(:each) || to_commit.kind_of?(String))
       

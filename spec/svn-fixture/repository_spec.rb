@@ -168,7 +168,7 @@ describe SvnFixture::Repository do
     it 'should delete repository and working copy directories' do
       repos_path = @repos.instance_variable_get(:@repos_path)
       wc_path    = @repos.instance_variable_get(:@wc_path)
-      @repos.create # To create directories
+      @repos.checkout # To create directories
       
       File.exist?(repos_path).should be_true
       File.exist?(wc_path).should be_true
@@ -203,7 +203,7 @@ describe SvnFixture::Repository do
     
     it 'should not remove other Repositories' do
       other_repos = @klass.new('other')
-      other_repos.create
+      other_repos.checkout
       @klass.repositories.should == {'test' => @repos, 'other' => other_repos}
       @repos.destroy
       @klass.repositories.should == {'other' => other_repos}
