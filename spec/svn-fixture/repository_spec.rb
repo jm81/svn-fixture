@@ -138,10 +138,52 @@ describe SvnFixture::Repository do
   end
   
   describe '#destroy' do
-    it 'needs tests'
+    before(:each) do
+      @repos = @klass.new('test')
+    end
+    
+    it 'should delete repository and working copy directories' do
+      repos_path = @repos.instance_variable_get(:@repos_path)
+      wc_path    = @repos.instance_variable_get(:@wc_path)
+      @repos.create # To create directories
+      
+      File.exist?(repos_path).should be_true
+      File.exist?(wc_path).should be_true
+      
+      @repos.destroy
+      
+      File.exist?(repos_path).should be_false
+      File.exist?(wc_path).should be_false
+    end
+    
+    it 'should remove Repository from .repositories' do
+      @klass.repositories.should == {'test' => @repos}
+      @repos.destroy
+      @klass.repositories.should == {}
+    end
+    
+    it 'should not remove other Repositories' do
+      other_repos = @klass.new('other')
+      other_repos.create
+      @klass.repositories.should == {'test' => @repos, 'other' => other_repos}
+      @repos.destroy
+      @klass.repositories.should == {'other' => other_repos}
+      File.exist?(other_repos.instance_variable_get(:@repos_path)).should be_true
+      File.exist?(other_repos.instance_variable_get(:@wc_path)).should be_true
+    end
   end
   
   describe '.destroy_all' do
-    it 'needs tests'
+    it 'should destroy all Repositories' do
+      repos = [@klass.new('test1'), @klass.new('test2'), @klass.new('test3')]
+      repos.each {|repo| repo.should_receive(:destroy)}
+      @klass.destroy_all
+    end
+    
+    it 'should empty .repositories Hash' do
+      repos = [@klass.new('test1'), @klass.new('test2'), @klass.new('test3')]
+      @klass.destroy_all
+      @klass.repositories.should == {}      
+    end
   end
 end

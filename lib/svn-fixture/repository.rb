@@ -33,6 +33,12 @@ module SvnFixture
       def repositories
         @repositories ||= {}
       end
+      
+      # Remove all Repositories from +.repositories+ and delete repos and 
+      # working copy directories. Useful to call upon completion of tests.
+      def destroy_all
+        repositories.each {|name, repo| repo.destroy}
+      end
     end
     
     # Arguments (last two are optional)
@@ -120,5 +126,12 @@ module SvnFixture
       end
     end
     
+    # Remove Repository from +.repositories+ and delete repos and working copy
+    # directories.
+    def destroy
+      FileUtils.rm_rf(@repos_path)
+      FileUtils.rm_rf(@wc_path)
+      self.class.repositories.delete(@name)
+    end
   end
 end
