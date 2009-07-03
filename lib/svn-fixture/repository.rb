@@ -90,7 +90,6 @@ module SvnFixture
     # Partly based on setup_repository method from
     # http://svn.collab.net/repos/svn/trunk/subversion/bindings/swig/ruby/test/util.rb
     def create
-      FileUtils.rm_rf(@repos_path)
       FileUtils.mkdir_p(@repos_path)
       ::Svn::Repos.create(@repos_path)
 
@@ -101,8 +100,7 @@ module SvnFixture
     def checkout
       @repos = ::Svn::Repos.open(@repos_path)
       @repos_uri = "file://" + ::File.expand_path(@repos_path)
-      FileUtils.rm_rf(@wc_path)        
-      FileUtils.mkdir_p(@wc_path)  
+      FileUtils.mkdir_p(@wc_path)
       @ctx = ::Svn::Client::Context.new
  
       # I don't understand the auth_baton and log_baton, so I set them here,
