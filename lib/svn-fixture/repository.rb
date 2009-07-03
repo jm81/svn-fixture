@@ -1,21 +1,70 @@
 module SvnFixture
-  class Repository
-    @@repositories = {}
-    BASE_PATH = ::File.dirname(__FILE__) + "/tmp/"
-    
+  # Repository sets up the repository and is reponsible for checkouts and 
+  # the actual commit(s). No actual work is done until +commit+ is called.
+  class Repository   
     attr_reader :repos, :ctx, :wc_path
     
-    class << self
-      def get(name, repos_path)
-        @@repositories[name] ||= Repository.new(name, repos_path)
+    class << self      
+      # Get an SvnFixture::Repository by name. If not found, it creates a new
+      # one. It accepts a block which is evaluated within the Repository
+      # instance. +get+ is useful for re-accessing a Repository after initially 
+      # created. For example:
+      #
+      #     SvnFixture::Repository.get('test') do
+      #       revision(1, 'log msg') ...
+      #     end
+      #     
+      #     SvnFixture::Repository.get('test') do
+      #       revision(2, 'log msg') ...
+      #       revision(3, 'log msg') ...
+      #     end
+      #     
+      #     SvnFixture::Repository.get('test').commit
+      def get(name, repos_path = nil, wc_path = nil, &block)
+        if repositories[name]
+          repositories[name].instance_eval(&block) if block_given?
+          repositories[name]
+        else
+          Repository.new(name, repos_path, wc_path, &block)
+        end
       end
-    end  
+      
+      # Hash of {name => Repository} of currently defined Repositories
+      def repositories
+        @repositories ||= {}
+      end
+    end
     
-    def initialize(name, repos_path = nil)
+    # Arguments (last two are optional)
+    # - +name+: The name of the repository, used by Repository.get and used in
+    #   +repos_path+ and +wc_path+ if not given.
+    # - +repos_path+: The path where the repository is stored (defaults to
+    #   "#{config[:base_path]}/repo_#{name}"
+    # - +wc_path+: The path where the working copy is checked out (defaults to
+    #   "#{config[:base_path]}/wc_#{name}"
+    # Note: the paths should be normal file system paths, not file:/// paths.
+    #
+    # +new+ also accepts a block which is evaluated within the Repository
+    # instance:
+    #
+    #     SvnFixture::Repository.new('name') do
+    #       revision(1, 'log msg') ...
+    #     end
+    # 
+    # Otherwise, you could, for example:
+    #
+    #     r = SvnFixture::Repository.new('name')
+    #     r.revision(1, 'log msg') do
+    #       ...
+    #     end
+    #     r.commit
+    def initialize(name, repos_path = nil, wc_path = nil, &block)
       @name = name
-      @repos_path = repos_path || (BASE_PATH + 'repo_' + name)
-      @wc_path = BASE_PATH + 'wc_' + name
+      @repos_path = repos_path || ::File.join(SvnFixture::config[:base_path], "repo_#{name}")
+      @wc_path    = wc_path    || ::File.join(SvnFixture::config[:base_path], "wc_#{name}")
       @revisions = []
+      self.class.repositories[name] = self
+      self.instance_eval(&block) if block_given?
     end
     
     def revision(name, msg, options = {}, &block)
