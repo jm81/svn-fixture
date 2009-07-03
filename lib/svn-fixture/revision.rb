@@ -6,10 +6,10 @@ module SvnFixture
       @repo, @name, @message, @block = repo, name, message, block
       @author = options.delete(:author)
       @time = SvnFixture.svn_time(options.delete(:date))
-      @root = Directory.new(@repo, @repo.wc_path)
     end
     
     def commit
+      @root = Directory.new(@repo.ctx, @repo.wc_path)
       @root.instance_eval(&@block)
       ci = @repo.ctx.ci(@repo.wc_path)
       if ci # Ensure something changed

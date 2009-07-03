@@ -1,11 +1,11 @@
 module SvnFixture
   class File
-    def initialize(repo, path)
-      @repo, @path = repo, path
+    def initialize(ctx, path)
+      @ctx, @path = ctx, path
     end
     
     def prop(name, value)
-      @repo.ctx.propset(name, SvnFixture.svn_prop(value), @path)
+      @ctx.propset(name, SvnFixture.svn_prop(value), @path)
     end
     
     def body(val)
