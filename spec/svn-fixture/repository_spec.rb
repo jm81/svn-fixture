@@ -98,6 +98,23 @@ describe SvnFixture::Repository do
       r = @klass.new('test')
       r.instance_variable_get(:@revisions).should == []
     end
+    
+    it 'should verify that repos_path does not exist' do
+      repos_path = File.join(Dir.tmpdir, 'svn-fixture-test-path')
+      FileUtils.mkdir_p(repos_path)
+      lambda {
+        @klass.new('test', repos_path, File.join(Dir.tmpdir, 'other-test-path'))
+      }.should raise_error(RuntimeError, "repos_path already exists (#{repos_path})")
+    end
+    
+    it 'should verify that wc_path does not exist' do
+      File.exist?(File.join(Dir.tmpdir, 'other-test-path')).should be_false
+      wc_path = File.join(Dir.tmpdir, 'svn-fixture-test-path')
+      FileUtils.mkdir_p(wc_path)
+      lambda {
+        @klass.new('test', File.join(Dir.tmpdir, 'other-test-path'), wc_path)
+      }.should raise_error(RuntimeError, "wc_path already exists (#{wc_path})")
+    end
   end
   
   describe '#revision' do

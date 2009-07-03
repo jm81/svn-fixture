@@ -68,6 +68,7 @@ module SvnFixture
       @name = name
       @repos_path = repos_path || ::File.join(SvnFixture::config[:base_path], "repo_#{name}")
       @wc_path    = wc_path    || ::File.join(SvnFixture::config[:base_path], "wc_#{name}")
+      check_paths_available
       @revisions = []
       @dirs_created = [] # Keep track of any directories created for use by #destroy
       self.class.repositories[name] = self
@@ -132,6 +133,18 @@ module SvnFixture
     def destroy
       @dirs_created.each { |d| FileUtils.rm_rf(d) }
       self.class.repositories.delete(@name)
+    end
+    
+    private
+
+    # Check if either @repos_path or @wc_path exist. Called by #initialize,
+    # could also be called just before paths are created
+    def check_paths_available
+      if ::File.exist?(@repos_path)
+        raise RuntimeError, "repos_path already exists (#{@repos_path})"
+      elsif ::File.exist?(@wc_path)
+        raise RuntimeError, "wc_path already exists (#{@wc_path})"
+      end
     end
   end
 end
