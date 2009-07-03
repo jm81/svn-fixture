@@ -149,7 +149,26 @@ describe SvnFixture::Repository do
   end
 
   describe '#create' do
-    it 'needs tests'
+    before(:each) do
+      @repos = @klass.new('test')
+      @repos_path = @repos.instance_variable_get(:@repos_path)
+    end
+    
+    it 'should create Subversion repository' do
+      ::Svn::Repos.should_receive(:create).with(@repos_path)
+      @repos.create
+    end
+    
+    it 'should create at repos_path' do
+      File.exist?(@repos_path).should be_false
+      @repos.create
+      File.exist?(@repos_path).should be_true
+      @repos.instance_variable_get(:@dirs_created).should == [@repos_path]
+    end
+    
+    it 'should return self (for method chaining)' do
+      @repos.create.should be(@repos)
+    end
   end
   
   describe '#checkout' do

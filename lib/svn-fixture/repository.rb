@@ -93,8 +93,11 @@ module SvnFixture
       r
     end
     
-    # Partly based on setup_repository method from
-    # http://svn.collab.net/repos/svn/trunk/subversion/bindings/swig/ruby/test/util.rb
+    # Create the Subversion repository. This is called by #checkout unless 
+    # something already exists at @repos_path. It can also be called directly.
+    # This allows the flexibility of doing some work between creating the 
+    # Repository and running checkout or commit (although I've yet to think of
+    # what that work would be), or creating the repository some other way.
     def create
       FileUtils.mkdir_p(@repos_path)
       @dirs_created << @repos_path
