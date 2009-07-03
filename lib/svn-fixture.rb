@@ -32,6 +32,12 @@ module SvnFixture
       val.strftime("%Y-%m-%dT%H:%M:%S.000000Z")
     end
     
+    # Return a Date or Time formatted as expected by 
+    # ::Svn::Client::Context#propset (see +svn_time+); leave other values alone.
+    def svn_prop(val)
+      val.respond_to?(:strftime) ? svn_time(val) : val
+    end
+    
     def repo(name, repos_path = nil, &block)
       r = SvnFixture::Repository.get(name, repos_path)
       r.instance_eval(&block) if block_given?

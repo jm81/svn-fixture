@@ -46,7 +46,7 @@ module SvnFixture
     end
     
     def prop(name, value)
-      @repo.ctx.propset(name, SvnFixture.svn_time(value), @path[0..-2])
+      @repo.ctx.propset(name, SvnFixture.svn_prop(value), @path[0..-2])
     end
   end  
 end

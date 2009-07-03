@@ -5,7 +5,7 @@ module SvnFixture
     end
     
     def prop(name, value)
-      @repo.ctx.propset(name, SvnFixture.svn_time(value), @path)
+      @repo.ctx.propset(name, SvnFixture.svn_prop(value), @path)
     end
     
     def body(val)

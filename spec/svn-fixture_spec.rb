@@ -20,4 +20,19 @@ describe SvnFixture do
       SvnFixture.svn_time(nil).should be_nil
     end
   end
+  
+  describe '.svn_prop' do
+    it 'should format Time/Date as expected by ::Svn::Client::Context#propset' do
+      t = Time.parse('2009-06-18 13:00')
+      SvnFixture.svn_prop(t).should == '2009-06-18T13:00:00.000000Z'
+      
+      d = Date.parse('2009-06-19')
+      SvnFixture.svn_prop(d).should == '2009-06-19T00:00:00.000000Z'
+    end
+    
+    it 'should leave alone non Time/Date values' do
+      t = 'Test'
+      SvnFixture.svn_prop(t).should == 'Test'
+    end
+  end
 end
