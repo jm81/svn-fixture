@@ -76,6 +76,12 @@ describe SvnFixture::Repository do
       end
     end
     
+    it "should verify there's no other Repository with this name" do
+      @klass.new('test')
+      lambda { @klass.new('test') }.should raise_error(
+          RuntimeError, "A Repository with this name (test) already exists.")
+    end
+    
     it 'should set up @repos_path' do
       r = @klass.new('test1', '/test/path')
       r.instance_variable_get(:@repos_path).should == '/test/path'

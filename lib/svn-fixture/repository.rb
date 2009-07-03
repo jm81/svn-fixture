@@ -66,6 +66,10 @@ module SvnFixture
     #     r.commit
     def initialize(name, repos_path = nil, wc_path = nil, &block)
       @name = name
+      if self.class.repositories[name]
+        raise RuntimeError, "A Repository with this name (#{@name}) already exists."
+      end
+      
       @repos_path = repos_path || ::File.join(SvnFixture::config[:base_path], "repo_#{name}")
       @wc_path    = wc_path    || ::File.join(SvnFixture::config[:base_path], "wc_#{name}")
       check_paths_available
