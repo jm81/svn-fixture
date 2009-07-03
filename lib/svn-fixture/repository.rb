@@ -142,8 +142,7 @@ module SvnFixture
     
     private
 
-    # Check if either @repos_path or @wc_path exist. Called by #initialize,
-    # could also be called just before paths are created
+    # Check if either @repos_path or @wc_path exist. Called by #initialize.
     def check_paths_available
       if ::File.exist?(@repos_path)
         raise RuntimeError, "repos_path already exists (#{@repos_path})"
