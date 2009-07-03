@@ -69,6 +69,7 @@ module SvnFixture
       @repos_path = repos_path || ::File.join(SvnFixture::config[:base_path], "repo_#{name}")
       @wc_path    = wc_path    || ::File.join(SvnFixture::config[:base_path], "wc_#{name}")
       @revisions = []
+      @dirs_created = [] # Keep track of any directories created for use by #destroy
       self.class.repositories[name] = self
       self.instance_eval(&block) if block_given?
     end
@@ -91,6 +92,7 @@ module SvnFixture
     # http://svn.collab.net/repos/svn/trunk/subversion/bindings/swig/ruby/test/util.rb
     def create
       FileUtils.mkdir_p(@repos_path)
+      @dirs_created << @repos_path
       ::Svn::Repos.create(@repos_path)
 
       checkout
@@ -101,6 +103,7 @@ module SvnFixture
       @repos = ::Svn::Repos.open(@repos_path)
       @repos_uri = "file://" + ::File.expand_path(@repos_path)
       FileUtils.mkdir_p(@wc_path)
+      @dirs_created << @wc_path
       @ctx = ::Svn::Client::Context.new
  
       # I don't understand the auth_baton and log_baton, so I set them here,
@@ -127,8 +130,7 @@ module SvnFixture
     # Remove Repository from +.repositories+ and delete repos and working copy
     # directories.
     def destroy
-      FileUtils.rm_rf(@repos_path)
-      FileUtils.rm_rf(@wc_path)
+      @dirs_created.each { |d| FileUtils.rm_rf(d) }
       self.class.repositories.delete(@name)
     end
   end

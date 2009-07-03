@@ -156,6 +156,22 @@ describe SvnFixture::Repository do
       File.exist?(wc_path).should be_false
     end
     
+    it 'should not destroy directories that the Repository did not make' do
+      repos_path = @repos.instance_variable_get(:@repos_path)
+      wc_path    = @repos.instance_variable_get(:@wc_path)
+      FileUtils.mkdir_p(repos_path)
+      FileUtils.mkdir_p(wc_path)
+      
+      @repos.destroy
+      
+      File.exist?(repos_path).should be_true
+      File.exist?(wc_path).should be_true
+      
+      # Remove for other tests
+      FileUtils.rm_rf(repos_path)
+      FileUtils.rm_rf(wc_path)
+    end
+    
     it 'should remove Repository from .repositories' do
       @klass.repositories.should == {'test' => @repos}
       @repos.destroy
