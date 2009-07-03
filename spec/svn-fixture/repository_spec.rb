@@ -172,7 +172,44 @@ describe SvnFixture::Repository do
   end
   
   describe '#checkout' do
-    it 'needs tests'
+    before(:each) do
+      @repos = @klass.new('test')
+      @repos_path = @repos.instance_variable_get(:@repos_path)
+      @wc_path = @repos.instance_variable_get(:@wc_path)
+    end
+    
+    it 'should call #create if needed' do
+      File.exist?(@repos_path).should be_false
+      @repos.checkout
+      File.exist?(@repos_path).should be_true
+      @repos.instance_variable_get(:@dirs_created).should include(@repos_path)
+    end
+    
+    it 'should call not call #create if something exists at @repos_path' do
+      FileUtils.mkdir_p(@repos_path)
+      ::Svn::Repos.create(@repos_path)
+      @repos.should_not_receive(:create)
+      @repos.checkout
+      FileUtils.rm_rf(@repos_path)
+    end
+    
+    it 'should create @ctx (Svn::Client::Context)' do
+      @repos.ctx.should be_nil
+      @repos.checkout
+      @repos.ctx.should be_kind_of(::Svn::Client::Context)
+    end
+    
+    it 'should checkout repository at wc_path' do
+      File.exist?(@wc_path).should be_false
+      @repos.checkout
+      File.exist?(@wc_path).should be_true
+      File.exist?(File.join(@wc_path, '.svn')).should be_true
+      @repos.instance_variable_get(:@dirs_created).should include(@wc_path)
+    end
+    
+    it 'should return self' do
+      @repos.checkout.should be(@repos)
+    end
   end
   
   describe '#commit' do

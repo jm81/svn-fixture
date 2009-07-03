@@ -105,7 +105,11 @@ module SvnFixture
       self
     end
 
-    # Setup context and working copy
+    # Checkout a working copy, and setup context. This is call by #commit unless
+    # something already exists at @wc_path. It can also be called directly.
+    # This allows the flexibility of doing some work between checking out the 
+    # Repository and commit, or checking out some other way. Also, calls #create
+    # if needed.
     def checkout
       create unless ::File.exist?(@repos_path)
       @repos = ::Svn::Repos.open(@repos_path)
