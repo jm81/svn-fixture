@@ -38,10 +38,9 @@ module SvnFixture
       val.respond_to?(:strftime) ? svn_time(val) : val
     end
     
-    def repo(name, repos_path = nil, &block)
-      r = SvnFixture::Repository.get(name, repos_path)
-      r.instance_eval(&block) if block_given?
-      r
+    # .repo is just a shortcut to +SvnFixture::Repository.get+
+    def repo(*args, &block)
+      SvnFixture::Repository.get(*args, &block)
     end
   end
 end

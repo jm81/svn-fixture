@@ -35,4 +35,11 @@ describe SvnFixture do
       SvnFixture.svn_prop(t).should == 'Test'
     end
   end
+  
+  describe '.repo' do
+    it 'should call Repository.get' do
+      SvnFixture::Repository.should_receive(:get).with('test', '/tmp/repos_test', 'tmp/wc')
+      SvnFixture.repo('test', '/tmp/repos_test', 'tmp/wc')
+    end
+  end
 end
