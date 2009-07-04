@@ -33,14 +33,6 @@ module SvnFixture
       @ctx.cp(@path + from, @path + to)
     end
     
-    def copy_from_wistle(wistle_path)
-      wistle_path = ::File.expand_path(
-        ::File.dirname(__FILE__) + "/../../" + wistle_path)
-      path = @path + wistle_path.split("/")[-1]
-      FileUtils.cp(wistle_path, path)
-      @ctx.add(path)
-    end
-    
     def delete(name)
       @ctx.delete(@path + name)
     end
