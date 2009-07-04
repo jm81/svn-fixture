@@ -1,6 +1,6 @@
 module SvnFixture
-  # A File to be added to the Repository. Normally, this would done through
-  # Revison#file (or Directory#file), in a block, for example:
+  # A File to be added to or edited within the Repository. Normally, this would 
+  # done through Revison#file (or Directory#file), in a block, for example:
   #
   #     SvnFixture.repo('repo_name') do
   #       revision(1, 'msg') do
