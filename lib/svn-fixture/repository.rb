@@ -88,7 +88,7 @@ module SvnFixture
     #   instance (the root directory at this revision). See +Directory+ for
     #   more information.
     def revision(name, msg, options = {}, &block)
-      r = Revision.new(self, name, msg, options, &block)
+      r = Revision.new(name, msg, options, &block)
       @revisions << r
       r
     end
@@ -120,7 +120,18 @@ module SvnFixture
       @ctx.checkout(@repos_uri, @wc_path)
       self
     end
-
+    
+    # Commit actually commits the changes of the revisions. It accepts an 
+    # optional Array of Revisions or Revision names. Otherwise, it commits all
+    # revisions. If +to_commit+ is an Array of revisions (not revision names),
+    # they do not need to be explicitly part of this Repository (that is, they
+    # do not need to have been created through self#revision)
+    # 
+    #     repos.commit # Commits all Revisions added through self#revision
+    #     repos.commit([1,2,4]) # Commits Revisions named 1, 2, and 4, added through self#revision
+    #     repos.commit([rev1, rev3]) # Assuming rev1 and rev3 are instances of
+    #                                # SvnFixture::Revision, commits them
+    #                                # whether or not they were added through self#revision
     def commit(to_commit = nil)
       checkout unless ::File.exist?(@wc_path)
       to_commit = @revisions if to_commit.nil?
@@ -128,7 +139,7 @@ module SvnFixture
       
       to_commit.each do | rev |
         rev = @revisions.find{ |r| r.name == rev } unless rev.kind_of?(Revision)
-        rev.commit
+        rev.commit(self)
       end
     end
     

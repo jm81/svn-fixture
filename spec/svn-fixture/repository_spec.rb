@@ -129,7 +129,7 @@ describe SvnFixture::Repository do
     end
     
     it 'should create a Revision' do
-      SvnFixture::Revision.should_receive(:new).with(@repos, 1, 'log msg', {})
+      SvnFixture::Revision.should_receive(:new).with(1, 'log msg', {})
       @repos.revision(1, 'log msg', {})
     end
     
