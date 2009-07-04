@@ -1,6 +1,7 @@
 module SvnFixture
   # A File to be added to or edited within the Repository. Normally, this would 
-  # done through Revison#file (or Directory#file), in a block, for example:
+  # done through Directory#file, in a block given to a Directory or
+  # Revision, for example:
   #
   #     SvnFixture.repo('repo_name') do
   #       revision(1, 'msg') do
@@ -31,7 +32,8 @@ module SvnFixture
   #     f.prop('propname', 'Value')
   class File
     
-    # +new+ is normally called through Revison#file (or Directory#file).
+    # +new+ is normally called through Directory#file (a block to a Revision is
+    # applied to the root Directory).
     #
     # Arguments are:
     # - +ctx+: An Svn::Client::Context, normally from Repository#ctx
