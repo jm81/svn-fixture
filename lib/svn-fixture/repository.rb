@@ -2,7 +2,7 @@ module SvnFixture
   # Repository sets up the repository and is reponsible for checkouts and 
   # the actual commit(s). No actual work is done until +commit+ is called.
   class Repository   
-    attr_reader :repos, :ctx, :wc_path
+    attr_reader :repos, :ctx, :wc_path, :revisions
     
     class << self      
       # Get an SvnFixture::Repository by name. If not found, it creates a new
@@ -132,6 +132,10 @@ module SvnFixture
     #     repos.commit([rev1, rev3]) # Assuming rev1 and rev3 are instances of
     #                                # SvnFixture::Revision, commits them
     #                                # whether or not they were added through self#revision
+    #
+    # A Revision can be added to the revisions Array directly:
+    #
+    #     repos.revisions << Revision.new(1, 'msg')
     def commit(to_commit = nil)
       checkout unless ::File.exist?(@wc_path)
       to_commit = @revisions if to_commit.nil?

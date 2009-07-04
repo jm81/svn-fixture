@@ -147,6 +147,16 @@ describe SvnFixture::Repository do
       rev.instance_variable_get(:@block).should be_kind_of(Proc)
     end
   end
+  
+  describe '@revisions' do
+    it 'can be updated directly' do
+      @repos = @klass.new('test')
+      @repos.revisions.should == []
+      rev = SvnFixture::Revision.new(1, 'msg')
+      @repos.revisions << rev
+      @repos.instance_variable_get(:@revisions).should == [rev]
+    end
+  end
 
   describe '#create' do
     before(:each) do
