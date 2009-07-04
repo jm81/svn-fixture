@@ -42,4 +42,48 @@ describe SvnFixture do
       SvnFixture.repo('test', '/tmp/repos_test', 'tmp/wc')
     end
   end
+  
+  describe '.simple_context' do
+    before(:each) do
+      SvnFixture::Repository.destroy_all
+      @repos = SvnFixture.repo('test').create
+      @repos_path = @repos.instance_variable_get(:@repos_path)
+      @wc_path = @repos.instance_variable_get(:@wc_path)
+      @path = File.join(@wc_path, 'file.txt')
+      @full_repos_path = "file://#{File.join(@repos_path, 'file.txt')}"
+    end
+    
+    after(:each) do
+      FileUtils.rm_rf(@wc_path)
+    end
+    
+    after(:all) do
+      SvnFixture::Repository.destroy_all
+    end
+    
+    def add_prop_to_file
+      FileUtils.touch(@path)
+      @ctx.add(@path)
+      file = SvnFixture::File.new(@ctx, @path)
+      file.prop('name', 'Value')
+      @ctx.commit(@wc_path)
+      @ctx.propget('name', @path)[@full_repos_path].should == 'Value'
+    end
+    
+    it 'should return a Context' do
+      SvnFixture.simple_context.should be_kind_of(::Svn::Client::Context)
+    end
+    
+    it 'should be useable by File/Directory with a working copy checked out' do
+      @repos.checkout # Checkout under different context (although same setup)
+      @ctx = SvnFixture.simple_context
+      add_prop_to_file
+    end
+    
+    it 'should be useable to checkout a working copy' do
+      @ctx = SvnFixture.simple_context
+      @ctx.checkout("file://" + ::File.expand_path(@repos_path), @wc_path)
+      add_prop_to_file
+    end
+  end
 end

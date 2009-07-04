@@ -12,6 +12,23 @@ module SvnFixture
   #     end
   #
   # In that case, Revision takes care of passing the +ctx+ argument.
+  # 
+  # To call SvnFixture::File.new directly, you will need to set up a context
+  # (instance of Svn::Client::Context) and check out a working copy. 
+  # +SvnFixture.simple_context+ is a quick method for settin up a Context.
+  #
+  # Assuming an existing checked out working copy:
+  #
+  #     ctx = SvnFixture.simple_context
+  #     f = SvnFixture::File.new(ctx, '/full/fs/path/to/file.txt')
+  #     f.prop('propname', 'Value')
+  #
+  # Or, call #checkout on Context:
+  #
+  #     ctx = SvnFixture.simple_context
+  #     ctx.checkout('file:///repository/uri', '/fs/path/of/wc')
+  #     f = SvnFixture::File.new(ctx, '/full/fs/path/to/file.txt')
+  #     f.prop('propname', 'Value')
   class File
     
     # +new+ is normally called through Revison#file (or Directory#file).

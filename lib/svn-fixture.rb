@@ -42,6 +42,21 @@ module SvnFixture
     def repo(*args, &block)
       SvnFixture::Repository.get(*args, &block)
     end
+    
+    # Setup and return a simple ::Svn::Client::Context. This is called by
+    # Repository#checkout, but can also be used in called Directory.new or 
+    # File.new directly. See SvnFixture::File for examples.
+    def simple_context
+      ctx = ::Svn::Client::Context.new
+ 
+      # I don't understand the auth_baton and log_baton, so I set them here,
+      # then use revision properties.
+      ctx.add_username_prompt_provider(0) do |cred, realm, username, may_save|
+         cred.username = "ANON"
+      end
+      ctx.set_log_msg_func {|items| [true, ""]}
+      ctx
+    end
   end
 end
 

@@ -116,15 +116,7 @@ module SvnFixture
       @repos_uri = "file://" + ::File.expand_path(@repos_path)
       FileUtils.mkdir_p(@wc_path)
       @dirs_created << @wc_path
-      @ctx = ::Svn::Client::Context.new
- 
-      # I don't understand the auth_baton and log_baton, so I set them here,
-      # then use revision properties.
-      @ctx.add_username_prompt_provider(0) do |cred, realm, username, may_save|
-         cred.username = "ANON"
-      end
-      @ctx.set_log_msg_func {|items| [true, ""]}
-      
+      @ctx = SvnFixture::simple_context
       @ctx.checkout(@repos_uri, @wc_path)
       self
     end
