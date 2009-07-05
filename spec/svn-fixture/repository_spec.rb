@@ -223,7 +223,63 @@ describe SvnFixture::Repository do
   end
   
   describe '#commit' do
-    it 'needs tests'
+    before(:each) do
+      @repos = @klass.new('test') do
+        revision(1, 'log') do
+          dir 'test-dir'
+        end
+        
+        revision(2, 'log') do
+          file 'test-file.txt'
+        end
+        
+        revision(3, 'log') do
+          file 'test-file2.txt'
+        end
+      end
+      @repos_path = @repos.instance_variable_get(:@repos_path)
+      @wc_path = @repos.instance_variable_get(:@wc_path)
+    end
+    
+    it 'should call #checkout if needed' do
+      File.exist?(@wc_path).should be_false
+      @repos.commit
+      File.exist?(@wc_path).should be_true
+      @repos.instance_variable_get(:@dirs_created).should include(@wc_path)
+    end
+    
+    it 'should call not call #checkout if something exists at @wc_path' do
+      @repos.checkout
+      File.exist?(@wc_path).should be_true
+      @repos.should_not_receive(:checkout)
+      @repos.commit
+    end
+    
+    it 'should commit all Revisions if no arguments given' do
+      @repos.revisions[0].should_receive(:commit).with(@repos)
+      @repos.revisions[1].should_receive(:commit).with(@repos)
+      @repos.revisions[2].should_receive(:commit).with(@repos)
+      @repos.commit
+    end
+    
+    it 'should commit Revisions by name and/or actual instance' do
+      @repos.revisions[0].should_receive(:commit).with(@repos)
+      @repos.revisions[2].should_receive(:commit).with(@repos)
+      @repos.commit(@repos.revisions[2], 1)
+    end
+    
+=begin
+      def commit(to_commit = nil)
+      checkout unless ::File.exist?(@wc_path)
+      to_commit = @revisions if to_commit.nil?
+      to_commit = [to_commit] if (!to_commit.respond_to?(:each) || to_commit.kind_of?(String))
+      
+      to_commit.each do | rev |
+        rev = @revisions.find{ |r| r.name == rev } unless rev.kind_of?(Revision)
+        rev.commit(self)
+      end
+    end
+=end
   end
   
   describe '#destroy' do
