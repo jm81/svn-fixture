@@ -267,19 +267,6 @@ describe SvnFixture::Repository do
       @repos.revisions[2].should_receive(:commit).with(@repos)
       @repos.commit(@repos.revisions[2], 1)
     end
-    
-=begin
-      def commit(to_commit = nil)
-      checkout unless ::File.exist?(@wc_path)
-      to_commit = @revisions if to_commit.nil?
-      to_commit = [to_commit] if (!to_commit.respond_to?(:each) || to_commit.kind_of?(String))
-      
-      to_commit.each do | rev |
-        rev = @revisions.find{ |r| r.name == rev } unless rev.kind_of?(Revision)
-        rev.commit(self)
-      end
-    end
-=end
   end
   
   describe '#destroy' do
