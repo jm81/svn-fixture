@@ -121,24 +121,24 @@ module SvnFixture
       self
     end
     
-    # Commit actually commits the changes of the revisions. It accepts an 
-    # optional Array of Revisions or Revision names. Otherwise, it commits all
-    # revisions. If +to_commit+ is an Array of revisions (not revision names),
+    # Commit actually commits the changes of the revisions. It optionally 
+    # accepts Revisions or Revision names. If none are given, it commits all
+    # revisions. If any of the arguments are Revisions (not revision names),
     # they do not need to be explicitly part of this Repository (that is, they
     # do not need to have been created through self#revision)
     # 
     #     repos.commit # Commits all Revisions added through self#revision
-    #     repos.commit([1,2,4]) # Commits Revisions named 1, 2, and 4, added through self#revision
-    #     repos.commit([rev1, rev3]) # Assuming rev1 and rev3 are instances of
-    #                                # SvnFixture::Revision, commits them
-    #                                # whether or not they were added through self#revision
+    #     repos.commit(1,2,4) # Commits Revisions named 1, 2, and 4, added through self#revision
+    #     repos.commit(rev1, rev3) # Assuming rev1 and rev3 are instances of
+    #                              # SvnFixture::Revision, commits them
+    #                              # whether or not they were added through self#revision
     #
     # A Revision can be added to the revisions Array directly:
     #
     #     repos.revisions << Revision.new(1, 'msg')
-    def commit(to_commit = nil)
+    def commit(*to_commit)
       checkout unless ::File.exist?(@wc_path)
-      to_commit = @revisions if to_commit.nil?
+      to_commit = @revisions if to_commit.empty?
       to_commit = [to_commit] if (!to_commit.respond_to?(:each) || to_commit.kind_of?(String))
       
       to_commit.each do | rev |
