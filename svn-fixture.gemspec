@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{svn-fixture}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jared Morgan"]
@@ -32,7 +32,8 @@ Gem::Specification.new do |s|
      "spec/svn-fixture/integration_spec.rb",
      "spec/svn-fixture/repository_spec.rb",
      "spec/svn-fixture/revision_spec.rb",
-     "spec/svn-fixture_spec.rb"
+     "spec/svn-fixture_spec.rb",
+     "svn-fixture.gemspec"
   ]
   s.homepage = %q{http://github.com/jm81/svn-fixture}
   s.rdoc_options = ["--charset=UTF-8"]
