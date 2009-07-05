@@ -1,9 +1,0 @@
-= svn-fixture
-
-Description goes here.
-
-TODO: Subversion Ruby bindings must be installed; add instructions
-
-== Copyright
-
-Copyright (c) 2009 Jared Morgan. See LICENSE for details.
