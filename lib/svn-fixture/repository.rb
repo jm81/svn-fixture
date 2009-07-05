@@ -113,11 +113,10 @@ module SvnFixture
     def checkout
       create unless ::File.exist?(@repos_path)
       @repos = ::Svn::Repos.open(@repos_path)
-      @repos_uri = "file://" + ::File.expand_path(@repos_path)
       FileUtils.mkdir_p(@wc_path)
       @dirs_created << @wc_path
       @ctx = SvnFixture::simple_context
-      @ctx.checkout(@repos_uri, @wc_path)
+      @ctx.checkout(self.uri, @wc_path)
       self
     end
     
@@ -152,6 +151,11 @@ module SvnFixture
     def destroy
       @dirs_created.each { |d| FileUtils.rm_rf(d) }
       self.class.repositories.delete(@name)
+    end
+    
+    # URI (file://...) for accessing the Repository
+    def uri
+      "file://" + ::File.expand_path(@repos_path)
     end
     
     private

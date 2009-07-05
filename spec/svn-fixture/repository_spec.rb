@@ -321,6 +321,13 @@ describe SvnFixture::Repository do
     end
   end
   
+  describe '#uri' do
+    it 'should return the uri for accessing the Repository' do
+      r = @klass.new('test1', '/test/path')
+      r.uri.should == 'file:///test/path'
+    end
+  end
+  
   describe '.destroy_all' do
     it 'should destroy all Repositories' do
       repos = [@klass.new('test1'), @klass.new('test2'), @klass.new('test3')]
