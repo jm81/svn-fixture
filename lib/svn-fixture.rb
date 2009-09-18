@@ -8,6 +8,8 @@ require "svn/fs"
 require "svn/repos"
 
 module SvnFixture
+  VERSION = '0.1.2'
+  
   CONFIG_DEFAULTS = {
     :base_path => File.join(Dir.tmpdir, 'svn-fixture')
   }
@@ -65,7 +67,7 @@ if defined?(Merb::Plugins)
   Merb::Plugins.config[:svn_fixture] = SvnFixture.config
 end
 
-# Require classes
-%w{ repository revision directory file }.each do |file|
-  require File.dirname(__FILE__) + '/svn-fixture/' + file
-end
+require 'svn-fixture/repository'
+require 'svn-fixture/revision'
+require 'svn-fixture/directory'
+require 'svn-fixture/file'

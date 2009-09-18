@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 # Test again fixtures/hello_world.rb to follow a complete fixture generation.
 describe 'SvnFixture integration' do
