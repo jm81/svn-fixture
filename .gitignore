@@ -7,3 +7,4 @@ pkg
 .loadpath
 *qt_temp*
 *~
+*.gem
