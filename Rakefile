@@ -9,6 +9,12 @@ begin
     gem.email = "jmorgan@morgancreative.net"
     gem.homepage = "http://github.com/jm81/svn-fixture"
     gem.authors = ["Jared Morgan"]
+    gem.description = <<-EOF
+svn-fixture simplifies creating (or updating) a Subversion repository. It is
+designed to be used in tests that require a Subversion repo, but can also be
+used to initialize a repository according to some template. svn-fixture depends
+on the Subversion Ruby bindings.
+EOF
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
