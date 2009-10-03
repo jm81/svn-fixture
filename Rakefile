@@ -5,7 +5,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "svn-fixture"
-    gem.summary = %Q{TODO}
+    gem.summary = %Q{Ruby library to create Subversion repositories useful for tests}
     gem.email = "jmorgan@morgancreative.net"
     gem.homepage = "http://github.com/jm81/svn-fixture"
     gem.authors = ["Jared Morgan"]
