@@ -24,6 +24,7 @@ module SvnFixture
     # - +options+:
     #   - +:author+: The Revision's author
     #   - +:date+: The date and time of the commit
+    #   - Additional options will set revprops
     # - Optionally accepts a block. The block, if given, is run at the time
     #   #commit is called, within the context of the root directory of the
     #   Repository, which is an instance of SvnFixture::Directory. For example:
@@ -35,6 +36,7 @@ module SvnFixture
       @name, @message, @block = name, message, block
       @author = options.delete(:author)
       @date = SvnFixture.svn_time(options.delete(:date))
+      @revprops = options
     end
     
     # Processes the changes made in this revision. Normally these would be made
@@ -56,6 +58,9 @@ module SvnFixture
         repo.repos.fs.set_prop('svn:log', @message, rev) if @message
         repo.repos.fs.set_prop('svn:author', @author, rev) if @author
         repo.repos.fs.set_prop('svn:date', @date, rev) if @date
+        @revprops.each do | key, val |
+          repo.repos.fs.set_prop(key.to_s, val.to_s, rev)
+        end
       else
         puts "Warning: No change in revision #{name} (SvnFixture::Revision#commit)"
       end

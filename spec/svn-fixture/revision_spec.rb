@@ -14,6 +14,7 @@ describe SvnFixture::Revision do
       rev.name.should == 'name'
       rev.instance_variable_get(:@message).should == 'msg'
       rev.instance_variable_get(:@author).should == 'author'
+      rev.instance_variable_get(:@revprops).should == {}
       rev.instance_variable_get(:@block).should be_kind_of(Proc)
     end
     
@@ -28,7 +29,7 @@ describe SvnFixture::Revision do
       @repos = SvnFixture::repo('file_test').checkout
       # @repos_path = @repos.instance_variable_get(:@repos_path)
       @wc_path = @repos.instance_variable_get(:@wc_path)
-      @rev = @klass.new(1, 'msg', :author => 'author', :date => Time.parse('2009-01-01 12:00:00Z')) do
+      @rev = @klass.new(1, 'msg', :author => 'author', :date => Time.parse('2009-01-01 12:00:00Z'), 'other:revprop' => 20) do
         dir('test-dir')
       end
       @rev.commit(@repos)
@@ -58,6 +59,10 @@ describe SvnFixture::Revision do
     it 'should set date if given' do
       @fs.prop(Svn::Core::PROP_REVISION_DATE, 1).should == 
           Time.parse('2009-01-01T12:00:00.000000Z')
+    end
+    
+    it 'should set additional revprops if given' do
+      @fs.prop('other:revprop', 1).should == '20'
     end
     
     it 'should print warning if no changes' do
