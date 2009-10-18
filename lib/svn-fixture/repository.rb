@@ -2,7 +2,7 @@ module SvnFixture
   # Repository sets up the repository and is reponsible for checkouts and 
   # the actual commit(s). No actual work is done until +commit+ is called.
   class Repository   
-    attr_reader :repos, :ctx, :wc_path, :revisions
+    attr_reader :repos, :ctx, :revisions
     
     class << self      
       # Get an SvnFixture::Repository by name. If not found, it creates a new
@@ -153,9 +153,19 @@ module SvnFixture
       self.class.repositories.delete(@name)
     end
     
+    # Absolute path to working copy
+    def wc_path
+      ::File.expand_path(@wc_path)
+    end
+    
+    # Absolute path to repository
+    def repos_path
+      ::File.expand_path(@repos_path)
+    end
+    
     # URI (file://...) for accessing the Repository
     def uri
-      "file://" + ::File.expand_path(@repos_path)
+      "file://" + self.repos_path
     end
     
     private

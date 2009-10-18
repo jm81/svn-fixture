@@ -321,6 +321,20 @@ describe SvnFixture::Repository do
     end
   end
   
+  describe '#wc_path' do
+    it 'should be the absolute path to the working copy' do
+      r = @klass.new('test1', '/test/repos', '/test/wc')
+      r.wc_path.should == '/test/wc'
+    end
+  end
+  
+  describe '#repos_path' do
+    it 'should be the absolute path to the repository' do
+      r = @klass.new('test1', '/test/repos', '/test/wc')
+      r.repos_path.should == '/test/repos'
+    end
+  end
+  
   describe '#uri' do
     it 'should return the uri for accessing the Repository' do
       r = @klass.new('test1', '/test/path')
