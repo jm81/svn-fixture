@@ -8,7 +8,7 @@ require "svn/fs"
 require "svn/repos"
 
 module SvnFixture
-  VERSION = '0.1.2'
+  VERSION = '0.1.3'
   
   CONFIG_DEFAULTS = {
     :base_path => File.join(Dir.tmpdir, 'svn-fixture')
