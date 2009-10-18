@@ -59,6 +59,7 @@ module SvnFixture
         repo.repos.fs.set_prop('svn:author', @author, rev) if @author
         repo.repos.fs.set_prop('svn:date', @date, rev) if @date
         @revprops.each do | key, val |
+          val = SvnFixture.svn_time(val) if val.respond_to?(:strftime)
           repo.repos.fs.set_prop(key.to_s, val.to_s, rev)
         end
       else

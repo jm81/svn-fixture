@@ -29,7 +29,14 @@ describe SvnFixture::Revision do
       @repos = SvnFixture::repo('file_test').checkout
       # @repos_path = @repos.instance_variable_get(:@repos_path)
       @wc_path = @repos.instance_variable_get(:@wc_path)
-      @rev = @klass.new(1, 'msg', :author => 'author', :date => Time.parse('2009-01-01 12:00:00Z'), 'other:revprop' => 20) do
+      options = {
+        :author => 'author',
+        :date => Time.parse('2009-01-01 12:00:00Z'),
+        'other:revprop' => 20,
+        'other:timeprop' => Time.parse('2009-01-01 12:00:01.0912Z')
+      }
+      
+      @rev = @klass.new(1, 'msg', options) do
         dir('test-dir')
       end
       @rev.commit(@repos)
@@ -63,6 +70,7 @@ describe SvnFixture::Revision do
     
     it 'should set additional revprops if given' do
       @fs.prop('other:revprop', 1).should == '20'
+      @fs.prop('other:timeprop', 1).should == '2009-01-01T12:00:01.091200Z'
     end
     
     it 'should print warning if no changes' do
