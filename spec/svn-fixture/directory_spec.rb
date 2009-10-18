@@ -184,6 +184,26 @@ describe SvnFixture::Directory do
           'New Value'
     end
     
+    it 'should not set a property recursively by default' do
+      @dir.prop('prop:name', 'Prop Value')
+      rev = @ctx.ci(@wc_path).revision
+      @ctx.propget('prop:name', @path, rev)[@full_repos_path].should ==
+          'Prop Value'
+      @ctx.propget('prop:name', @path + "/subdir", rev)[@full_repos_path + "/subdir"].should be_nil
+      @ctx.propget('prop:name', @path + "/file.txt", rev)[@full_repos_path + "/file.txt"].should be_nil
+    end
+    
+    it 'should set a property recursively if told to' do
+      @dir.prop('prop:name', 'Prop Value', true)
+      rev = @ctx.ci(@wc_path).revision
+      @ctx.propget('prop:name', @path, rev)[@full_repos_path].should ==
+          'Prop Value'
+      @ctx.propget('prop:name', @path + "/subdir", rev)[@full_repos_path + "/subdir"].should ==
+          'Prop Value'
+      @ctx.propget('prop:name', @path + "/file.txt", rev)[@full_repos_path + "/file.txt"].should ==
+          'Prop Value'
+    end
+    
     it 'should format a Time correctly' do
       @dir.prop('prop:timeval', Time.parse('2009-06-18 14:00'))
       rev = @ctx.ci(@wc_path).revision

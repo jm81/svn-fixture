@@ -90,10 +90,13 @@ module SvnFixture
     
     # Set a property for the Directory
     # (see http://svnbook.red-bean.com/en/1.1/ch07s02.html):
-    # - +name+: The property name (must be "human-readable text")
-    # - +value+: The value of the property.
-    def prop(name, value)
-      @ctx.propset(name, SvnFixture.svn_prop(value), @path[0..-2])
+    #
+    # ==== Parameters
+    # name<String>:: The property name (must be "human-readable text")
+    # value<String>:: The value of the property.
+    # recurse<True, False>:: Apply this property to descendants?
+    def prop(name, value, recurse = false)
+      @ctx.propset(name, SvnFixture.svn_prop(value), @path[0..-2], recurse)
     end
   end
 end
