@@ -49,7 +49,7 @@ describe SvnFixture::File do
     end
     
     it 'should format a Time correctly' do
-      @file.prop('prop:timeval', Time.parse('2009-06-18 14:00'))
+      @file.prop('prop:timeval', Time.parse('2009-06-18 14:00 UTC'))
       rev = @ctx.ci(@wc_path).revision
       @ctx.propget('prop:timeval', @path, rev)[@full_repos_path].should ==
           '2009-06-18T14:00:00.000000Z'

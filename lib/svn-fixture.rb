@@ -31,6 +31,7 @@ module SvnFixture
     def svn_time(val)
       return nil if val.nil?
       val = Time.parse(val) unless val.respond_to?(:strftime)
+      val = val.utc if val.respond_to?(:utc)
       usec = val.respond_to?(:usec) ? val.usec : 0
       val.strftime("%Y-%m-%dT%H:%M:%S.") + sprintf('%06dZ', usec)
     end
