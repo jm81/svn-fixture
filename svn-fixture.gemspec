@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{svn-fixture}
-  s.version = "0.1.3"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jared Morgan"]
-  s.date = %q{2009-10-17}
+  s.date = %q{2009-10-18}
   s.description = %q{svn-fixture simplifies creating (or updating) a Subversion repository. It is
 designed to be used in tests that require a Subversion repo, but can also be
 used to initialize a repository according to some template. svn-fixture depends
