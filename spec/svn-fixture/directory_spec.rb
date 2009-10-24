@@ -211,4 +211,17 @@ describe SvnFixture::Directory do
           '2009-06-18T14:00:00.000000Z'
     end
   end
+  
+  describe '#propdel' do    
+    it 'should delete a property' do
+      @dir.prop('prop:del', 'Prop Value')
+      rev = @ctx.ci(@wc_path).revision
+      @ctx.propget('prop:del', @path, rev)[@full_repos_path].should ==
+          'Prop Value'
+      
+      @dir.propdel('prop:del')
+      rev = @ctx.ci(@wc_path).revision
+      @ctx.propget('prop:del', @path, rev)[@full_repos_path].should be_nil
+    end
+  end
 end

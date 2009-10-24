@@ -98,5 +98,13 @@ module SvnFixture
     def prop(name, value, recurse = false)
       @ctx.propset(name, SvnFixture.svn_prop(value), @path[0..-2], recurse)
     end
+    
+    # Remove a property from the directory
+    #
+    # ==== Parameters
+    # name<String>:: The property name
+    def propdel(name)
+      @ctx.propdel(name, @path[0..-2])
+    end
   end
 end

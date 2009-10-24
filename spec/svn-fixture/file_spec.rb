@@ -56,6 +56,19 @@ describe SvnFixture::File do
     end
   end
   
+  describe '#propdel' do    
+    it 'should delete a property' do
+      @file.prop('prop:del', 'Prop Value')
+      rev = @ctx.ci(@wc_path).revision
+      @ctx.propget('prop:del', @path, rev)[@full_repos_path].should ==
+          'Prop Value'
+      
+      @file.propdel('prop:del')
+      rev = @ctx.ci(@wc_path).revision
+      @ctx.propget('prop:del', @path, rev)[@full_repos_path].should be_nil
+    end
+  end
+  
   describe '#body' do
     it "should update the File's contents" do
       @file.body('Test Content')

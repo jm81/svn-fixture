@@ -50,6 +50,14 @@ module SvnFixture
       @ctx.propset(name, SvnFixture.svn_prop(value), @path)
     end
     
+    # Remove a property from the directory
+    #
+    # ==== Parameters
+    # name<String>:: The property name
+    def propdel(name)
+      @ctx.propdel(name, @path)
+    end
+    
     # Set the content of a file
     def body(val)
       ::File.open(@path, 'w') { |f| f.write(val) }
