@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{svn-fixture}
-  s.version = "0.2.0"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jared Morgan"]
-  s.date = %q{2009-10-18}
+  s.date = %q{2009-10-31}
   s.description = %q{svn-fixture simplifies creating (or updating) a Subversion repository. It is
 designed to be used in tests that require a Subversion repo, but can also be
 used to initialize a repository according to some template. svn-fixture depends
@@ -38,6 +38,7 @@ on the Subversion Ruby bindings.
      "spec/svn-fixture/file_spec.rb",
      "spec/svn-fixture/fixtures/hello_world.rb",
      "spec/svn-fixture/integration_spec.rb",
+     "spec/svn-fixture/props_shared.rb",
      "spec/svn-fixture/repository_spec.rb",
      "spec/svn-fixture/revision_spec.rb",
      "spec/svn-fixture_spec.rb",
@@ -55,6 +56,7 @@ on the Subversion Ruby bindings.
      "spec/svn-fixture/file_spec.rb",
      "spec/svn-fixture/fixtures/hello_world.rb",
      "spec/svn-fixture/integration_spec.rb",
+     "spec/svn-fixture/props_shared.rb",
      "spec/svn-fixture/repository_spec.rb",
      "spec/svn-fixture/revision_spec.rb",
      "spec/svn-fixture_spec.rb"
