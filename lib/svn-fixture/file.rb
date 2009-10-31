@@ -66,13 +66,23 @@ module SvnFixture
     # ==== Parameters
     # hsh<Hash>:: Properties to set (name => value)
     def props(hsh)
-      # Delete any that aren't in hash
-      url = @ctx.url_from_path(@clean_path)
-      existing = @ctx.proplist(@clean_path).find { |pl| pl.name == url }
+      # Getting the proplist for a node that hasn't been committed doesn't
+      # seem to work. This isn't a problem (there's no existing props to delete)
+      # so just skip those.
+      skip_deletes = false
+      @ctx.status(@clean_path) do |path, status|
+        skip_deletes = true if @clean_path == path && status.entry.add?
+      end
       
-      if existing
-        existing.props.each_pair do |k, v|
-          propdel(k) unless (hsh[k] || k =~ /\Asvn:entry/)
+      # Delete any that aren't in hash
+      unless skip_deletes
+        url = @ctx.url_from_path(@clean_path)
+        existing = @ctx.proplist(@clean_path).find { |pl| pl.name == url }
+        
+        if existing
+          existing.props.each_pair do |k, v|
+            propdel(k) unless (hsh[k] || k =~ /\Asvn:entry/)
+          end
         end
       end
       
