@@ -30,7 +30,7 @@ module SvnFixture
   #     ctx.checkout('file:///repository/uri', '/fs/path/of/wc')
   #     d = SvnFixture::Directory.new(ctx, '/fs/path/of/wc/to/dir')
   #     d.prop('propname', 'Value')
-  class Directory
+  class Directory < File
     
     # +new+ is normally called through Directory#dir (a block to a Revision is
     # applied to the root Directory).
@@ -43,6 +43,7 @@ module SvnFixture
       @ctx  = ctx
       @path = path
       @path += "/" unless path[-1] == 47
+      @clean_path = @path[0..-2] # Path without a trailing slash.
     end
     
     # Create or access a subdirectory. Takes the name of the subdirectory (not a
@@ -96,15 +97,7 @@ module SvnFixture
     # value<String>:: The value of the property.
     # recurse<True, False>:: Apply this property to descendants?
     def prop(name, value, recurse = false)
-      @ctx.propset(name, SvnFixture.svn_prop(value), @path[0..-2], recurse)
-    end
-    
-    # Remove a property from the directory
-    #
-    # ==== Parameters
-    # name<String>:: The property name
-    def propdel(name)
-      @ctx.propdel(name, @path[0..-2])
+      @ctx.propset(name, SvnFixture.svn_prop(value), @clean_path, recurse)
     end
   end
 end

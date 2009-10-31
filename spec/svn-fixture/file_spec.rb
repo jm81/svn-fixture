@@ -20,52 +20,20 @@ describe SvnFixture::File do
   before(:each) do
     @path = File.join(@wc_path, 'test.txt')
     @full_repos_path = "file://#{File.join(@repos_path, 'test.txt')}"
-    @file = @klass.new(@ctx, @path)
+    @file = @node = @klass.new(@ctx, @path)
   end
   
   after(:all) do
     SvnFixture::Repository.destroy_all
   end
   
+  it_should_behave_like "nodes with properties"
+  
   describe '#initialize' do
     it 'should set ctx and path' do
       file = @klass.new(@ctx, '/tmp/path')
       file.instance_variable_get(:@ctx).should == @ctx
       file.instance_variable_get(:@path).should == '/tmp/path'
-    end
-  end
-  
-  describe '#prop' do    
-    it 'should set a property' do
-      @file.prop('prop:name', 'Prop Value')
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:name', @path, rev)[@full_repos_path].should ==
-          'Prop Value'
-      
-      @file.prop('prop:name', 'New Value')
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:name', @path, rev)[@full_repos_path].should ==
-          'New Value'
-    end
-    
-    it 'should format a Time correctly' do
-      @file.prop('prop:timeval', Time.parse('2009-06-18 14:00 UTC'))
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:timeval', @path, rev)[@full_repos_path].should ==
-          '2009-06-18T14:00:00.000000Z'
-    end
-  end
-  
-  describe '#propdel' do    
-    it 'should delete a property' do
-      @file.prop('prop:del', 'Prop Value')
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:del', @path, rev)[@full_repos_path].should ==
-          'Prop Value'
-      
-      @file.propdel('prop:del')
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:del', @path, rev)[@full_repos_path].should be_nil
     end
   end
   

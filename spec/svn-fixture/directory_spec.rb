@@ -9,8 +9,11 @@ describe SvnFixture::Directory do
     @repos = SvnFixture::repo('dir_test') do
       revision(1, 'create directory and file') do
         dir('test-dir') do
+          prop 'three', 'dir'
           dir('subdir')
-          file('file.txt')
+          file('file.txt') do
+            prop 'one', 'two'
+          end
         end
       end
     end
@@ -23,12 +26,14 @@ describe SvnFixture::Directory do
   before(:each) do
     @path = File.join(@wc_path, 'test-dir')
     @full_repos_path = "file://#{File.join(@repos_path, 'test-dir')}"
-    @dir = @klass.new(@ctx, @path)
+    @dir = @node = @klass.new(@ctx, @path)
   end
   
   after(:all) do
     SvnFixture::Repository.destroy_all
   end
+  
+  it_should_behave_like "nodes with properties"
   
   describe '#initialize' do
     it 'should set ctx and path' do
@@ -172,18 +177,6 @@ describe SvnFixture::Directory do
   end
   
   describe '#prop' do    
-    it 'should set a property' do
-      @dir.prop('prop:name', 'Prop Value')
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:name', @path, rev)[@full_repos_path].should ==
-          'Prop Value'
-      
-      @dir.prop('prop:name', 'New Value')
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:name', @path, rev)[@full_repos_path].should ==
-          'New Value'
-    end
-    
     it 'should not set a property recursively by default' do
       @dir.prop('prop:name', 'Prop Value')
       rev = @ctx.ci(@wc_path).revision
@@ -202,26 +195,6 @@ describe SvnFixture::Directory do
           'Prop Value'
       @ctx.propget('prop:name', @path + "/file.txt", rev)[@full_repos_path + "/file.txt"].should ==
           'Prop Value'
-    end
-    
-    it 'should format a Time correctly' do
-      @dir.prop('prop:timeval', Time.parse('2009-06-18 14:00 UTC'))
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:timeval', @path, rev)[@full_repos_path].should ==
-          '2009-06-18T14:00:00.000000Z'
-    end
-  end
-  
-  describe '#propdel' do    
-    it 'should delete a property' do
-      @dir.prop('prop:del', 'Prop Value')
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:del', @path, rev)[@full_repos_path].should ==
-          'Prop Value'
-      
-      @dir.propdel('prop:del')
-      rev = @ctx.ci(@wc_path).revision
-      @ctx.propget('prop:del', @path, rev)[@full_repos_path].should be_nil
     end
   end
 end

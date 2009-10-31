@@ -71,5 +71,5 @@ end
 
 require 'svn-fixture/repository'
 require 'svn-fixture/revision'
-require 'svn-fixture/directory'
 require 'svn-fixture/file'
+require 'svn-fixture/directory'

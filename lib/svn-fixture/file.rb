@@ -40,6 +40,7 @@ module SvnFixture
     # - +path+: The path (on the file system) of the File in the working copy
     def initialize(ctx, path)
       @ctx, @path = ctx, path
+      @clean_path = path # Path without a trailing slash. Used by methods shared with Directory
     end
     
     # Set a property for the file
@@ -55,7 +56,30 @@ module SvnFixture
     # ==== Parameters
     # name<String>:: The property name
     def propdel(name)
-      @ctx.propdel(name, @path)
+      @ctx.propdel(name, @clean_path)
+    end
+    
+    # Set all properties from a hash, deleting any existing that are not
+    # included in the hash. "svn:entry" properties are ignored, as these are
+    # handled internally by Subversion.
+    # 
+    # ==== Parameters
+    # hsh<Hash>:: Properties to set (name => value)
+    def props(hsh)
+      # Delete any that aren't in hash
+      url = @ctx.url_from_path(@clean_path)
+      existing = @ctx.proplist(@clean_path).find { |pl| pl.name == url }
+      
+      if existing
+        existing.props.each_pair do |k, v|
+          propdel(k) unless (hsh[k] || k =~ /\Asvn:entry/)
+        end
+      end
+      
+      # Set props (except svn:entry)
+      hsh.each do |k, v|
+        prop(k, v) unless k =~ /\Asvn:entry/
+      end
     end
     
     # Set the content of a file
