@@ -50,7 +50,10 @@ module SvnFixture
     # Only argument is an instance of SvnFixture::Repository that is the
     # Repository to which this revision is committed.
     def commit(repo)
-      repo.ctx.update(repo.wc_path) # Ensure everything up-to-date
+      # First, ensure everything up-to-date
+      # The fourth argument as true tells update to ignore externals.
+      repo.ctx.update(repo.wc_path, "HEAD", nil, true)
+      
       root = Directory.new(repo.ctx, repo.wc_path)
       root.instance_eval(&@block) if @block
       ci = repo.ctx.ci(repo.wc_path)
